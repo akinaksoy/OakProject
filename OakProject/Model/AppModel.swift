@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct AppModel: Codable {
+struct AppModel: Codable,Identifiable {
     let packageName, name: String
     let iconURL: String
     let price: String
@@ -19,6 +19,7 @@ struct AppModel: Codable {
     let category: Category
     let developerName, developerEmail: String
     let developerAddress: String?
+    let id = UUID()
 
     enum CodingKeys: String, CodingKey {
         case packageName, name
