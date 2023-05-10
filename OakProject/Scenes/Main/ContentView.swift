@@ -9,35 +9,51 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var isShowingMenu = false
+    @State private var title = "Flashlight"
     @State var items = [DrawerMenuModel]()
     @ObservedObject var viewModel = MainViewModel()
     var body: some View {
         NavigationView {
-            
-            
-            ScrollView {
-                ForEach(viewModel.appList,id: \.id) { item  in
-                    ProductCell(product: item)
-                }
-            }
-            .navigationTitle("Oak Project")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: {
-                        isShowingMenu.toggle()
-                    }) {
-                        Image(systemName: "list.bullet").imageScale(.large)
+            ZStack {
+                ScrollView {
+                    ForEach(viewModel.appList,id: \.id) { item  in
+                        ProductCell(product: item)
                     }
                 }
+                .navigationTitle(title)
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button(action: {
+                            isShowingMenu.toggle()
+                        }) {
+                            Image(systemName: "list.bullet").imageScale(.large)
+                        }
+                    }
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button(action: {
+                            viewModel.appList = []
+                            viewModel.fetchApps(nil)
+                        }) {
+                            Image(systemName: "arrow.clockwise").imageScale(.large)
+                        }
+                    }
+                }
+                .listStyle(.plain)
+                .fullScreenCover(isPresented: $isShowingMenu) {
+                    DrawerMenuView(isShowingMenu: $isShowingMenu,items: $items,title: $title,viewModel: viewModel)
+                }
+                .onAppear {
+                    items = generateDrawerMenuList()
+                    viewModel.fetchApps(.flashLight)
+                }
+                if viewModel.isLoading {
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle())
+                        .scaleEffect(2, anchor: .center)
+                        .zIndex(1)
+                }
             }
-            .listStyle(.plain)
-            .fullScreenCover(isPresented: $isShowingMenu) {
-                DrawerMenuView(isShowingMenu: $isShowingMenu,items: $items)
-            }
-            .onAppear {
-                items = generateDrawerMenuList()
-                viewModel.fetchApps(.flashLight)
-            }
+            
         }
     }
 }

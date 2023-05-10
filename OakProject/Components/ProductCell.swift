@@ -24,15 +24,15 @@ struct ProductCell: View {
                 VStack(alignment: .leading) {
                 Text(product.name.capitalized)
                         .font(.headline)
-                Text(product.category.rawValue)
+                    Text(product.category)
                         .font(.system(size: 14))
                     HStack(spacing: 4) {
-                        Text(String(product.ratingValue))
+                        Text(String(product.ratingValue ?? 0.0))
                             .font(.system(size: 12))
                         Image(systemName: "star.fill")
                             .font(.system(size: 12))
                             .foregroundColor(.yellow)
-                        Text("(\(String(product.ratingCount)))")
+                        Text("(\(String(product.ratingCount ?? 0)))")
                             .font(.system(size: 12))
                         Text("\(String(product.downloads))")
                             .font(.system(size: 12))

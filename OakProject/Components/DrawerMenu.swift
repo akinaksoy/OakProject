@@ -10,7 +10,8 @@ import SwiftUI
 struct DrawerMenuView: View {
     @Binding var isShowingMenu: Bool
     @Binding var items : [DrawerMenuModel]
-    
+    @Binding var title : String
+    @ObservedObject var viewModel: MainViewModel
     var body: some View {
             VStack(alignment: .leading) {
                 List {
@@ -44,13 +45,15 @@ struct DrawerMenuView: View {
         }
     
     func didClickMenuItem(menuItem : DrawerMenuModel) {
+        viewModel.appList = []
         if menuItem.id == 0 {
-            
+            viewModel.fetchApps(.flashLight)
         } else if menuItem.id == 1 {
-            
+            viewModel.fetchApps(.colorLight)
         } else {
-            
+            viewModel.fetchApps(.sosAlert)
         }
+        title = menuItem.title
         isShowingMenu.toggle()
     }
 }
