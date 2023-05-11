@@ -47,11 +47,11 @@ struct DrawerMenuView: View {
     func didClickMenuItem(menuItem : DrawerMenuModel) {
         viewModel.appList = []
         if menuItem.id == 0 {
-            viewModel.fetchApps(.flashLight)
+            viewModel.fetchApps(.flashLight,isRefresh: false)
         } else if menuItem.id == 1 {
-            viewModel.fetchApps(.colorLight)
+            viewModel.fetchApps(.colorLight,isRefresh: false)
         } else {
-            viewModel.fetchApps(.sosAlert)
+            viewModel.fetchApps(.sosAlert,isRefresh: false)
         }
         title = menuItem.title
         isShowingMenu.toggle()

@@ -8,52 +8,42 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var isShowingMenu = false
-    @State private var title = "Flashlight"
-    @State var items = [DrawerMenuModel]()
-    @ObservedObject var viewModel = MainViewModel()
     var body: some View {
         NavigationView {
-            ZStack {
-                ScrollView {
-                    ForEach(viewModel.appList,id: \.id) { item  in
-                        ProductCell(product: item)
-                    }
-                }
-                .navigationTitle(title)
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        Button(action: {
-                            isShowingMenu.toggle()
-                        }) {
-                            Image(systemName: "list.bullet").imageScale(.large)
-                        }
-                    }
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button(action: {
-                            viewModel.appList = []
-                            viewModel.fetchApps(nil)
-                        }) {
-                            Image(systemName: "arrow.clockwise").imageScale(.large)
-                        }
-                    }
-                }
-                .listStyle(.plain)
-                .fullScreenCover(isPresented: $isShowingMenu) {
-                    DrawerMenuView(isShowingMenu: $isShowingMenu,items: $items,title: $title,viewModel: viewModel)
-                }
-                .onAppear {
-                    items = generateDrawerMenuList()
-                    viewModel.fetchApps(.flashLight)
-                }
-                if viewModel.isLoading {
-                    ProgressView()
-                        .progressViewStyle(CircularProgressViewStyle())
-                        .scaleEffect(2, anchor: .center)
-                        .zIndex(1)
-                }
+            VStack(spacing: 20) {
+                NavigationLink(
+                    destination: AppListView(title:"Flashlights",pageType: .flashLight),
+                    label: {
+                        Text("Flashlights")
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity, minHeight: 50)
+                            .background(Color.blue)
+                            .cornerRadius(8)
+                    })
+                
+                NavigationLink(
+                    destination: AppListView(title:"Colorlights",pageType: .colorLight),
+                    label: {
+                        Text("Color lights")
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity, minHeight: 50)
+                            .background(Color.green)
+                            .cornerRadius(8)
+                    })
+                
+                NavigationLink(
+                    destination: AppListView(title:"SOS Alerts",pageType: .sosAlert),
+                    label: {
+                        Text("SOS Alerts")
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity, minHeight: 50)
+                            .background(Color.orange)
+                            .cornerRadius(8)
+                    })
             }
-            
+            .padding()
+            .frame(maxWidth: .infinity, alignment: .center)
+            .background(Color.white)
         }
     }
 }
@@ -63,12 +53,4 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
-extension ContentView {
-    func generateDrawerMenuList() -> [DrawerMenuModel] {
-        var modelList = [DrawerMenuModel]()
-        modelList.append(DrawerMenuModel(id: 0, title: "Flashlights", subTitle: "Check Flashlights app", icon: ""))
-        modelList.append(DrawerMenuModel(id: 1, title: "Color Lights", subTitle: "Check Flashlights app", icon: ""))
-        modelList.append(DrawerMenuModel(id: 2, title: "Sos Alerts", subTitle: "Check Flashlights app", icon: ""))
-        return modelList
-    }
-}
+
