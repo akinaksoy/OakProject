@@ -12,6 +12,12 @@ struct ProductCell: View {
     
     var body: some View {
         ZStack {
+            Button(action: {
+            guard let url = URL(string: "https://play.google.com/store/apps/details?id=\(product.packageName)") else { return }
+            let detailView = DetailView(url: url)
+                UIApplication.shared.windows.first?.rootViewController?.present(UIHostingController(rootView: detailView), animated: true)
+            }) {
+           
             HStack {
                 KFImage(URL(string: product.iconURL))
                     .resizable()
@@ -41,6 +47,7 @@ struct ProductCell: View {
                 }
                 Spacer()
             }
+            }.buttonStyle(PlainButtonStyle())
             
         }
     }
